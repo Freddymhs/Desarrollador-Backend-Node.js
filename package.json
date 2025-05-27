@@ -8,7 +8,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
     "start": "node dist/server.js",
-    "dev": "nodemon --exec ts-node server.ts"
+    "dev": "nodemon --exec 'ts-node -r tsconfig-paths/register' server.ts"
   },
   "repository": {
     "type": "git",
@@ -23,13 +23,25 @@
   },
   "homepage": "https://github.com/Freddymhs/Desarrollador-Backend-Node.js#readme",
   "dependencies": {
-    "express": "^5.1.0"
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "helmet": "^8.1.0",
+    "morgan": "^1.10.0",
+    "sqlite3": "^5.1.7"
   },
   "devDependencies": {
+    "@types/connect-livereload": "^0.6.3",
+    "@types/cors": "^2.8.18",
     "@types/express": "^5.0.2",
+    "@types/livereload": "^0.9.5",
+    "@types/morgan": "^1.9.9",
     "@types/node": "^22.15.22",
+    "connect-livereload": "^0.6.1",
+    "dotenv": "^16.5.0",
+    "livereload": "^0.9.3",
     "nodemon": "^3.1.10",
     "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
     "typescript": "^5.8.3"
   }
 }

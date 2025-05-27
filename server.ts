@@ -1,15 +1,7 @@
-import express, { Request, Response } from "express";
+import app from "@/app";
+import { config } from "@/config/index";
+import { SERVER_MESSAGES } from "@/utils/constants";
 
-const app = express();
-const port = 3000;
-
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
-app.get("/", (_: Request, res: Response) => {
-  res.send("hello mundo");
-});
-
-app.listen(port, () => {
-  console.log(`running on http://localhost:${port}`);
-});
+app.listen(config.port, () =>
+  console.log(`${SERVER_MESSAGES.runningOn} ${config.host}:${config.port}`)
+);
