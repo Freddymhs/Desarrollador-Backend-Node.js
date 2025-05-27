@@ -1,27 +1,16 @@
 {
+  "type": "module",
   "name": "desarrollador-backend-node",
   "version": "1.0.0",
-  "description": "simple api rest with  WS",
+  "description": "simple api rest with WS",
   "main": "dist/server.js",
   "scripts": {
     "clean": "rm -rf dist",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
-    "start": "node dist/server.js",
-    "dev": "nodemon --exec 'ts-node -r tsconfig-paths/register' server.ts"
+    "start": "tsx server.ts",
+    "dev": "tsx watch server.ts"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Freddymhs/Desarrollador-Backend-Node.js.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
-  "bugs": {
-    "url": "https://github.com/Freddymhs/Desarrollador-Backend-Node.js/issues"
-  },
-  "homepage": "https://github.com/Freddymhs/Desarrollador-Backend-Node.js#readme",
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^5.1.0",
@@ -39,9 +28,7 @@
     "connect-livereload": "^0.6.1",
     "dotenv": "^16.5.0",
     "livereload": "^0.9.3",
-    "nodemon": "^3.1.10",
-    "ts-node": "^10.9.2",
-    "tsconfig-paths": "^4.2.0",
+    "tsx": "^4.19.4",
     "typescript": "^5.8.3"
   }
 }

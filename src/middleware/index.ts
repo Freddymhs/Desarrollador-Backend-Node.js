@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
-import { config } from "@/config/index";
+import config from "@config/index";
 
 const setupMiddlewares = (app: express.Application) => {
   app.use(express.json());
