@@ -11,7 +11,8 @@
     "start": "tsx dist/server.js",
     "dev": "npm run migration && tsx watch server.ts",
     "migration": "tsx src/models/migrations.ts",
-    "seed": "tsx src/seed/seed.ts"
+    "seed": "tsx src/seed/seed.ts",
+    "helper": "tsx ./helper.js"
   },
   "dependencies": {
     "cors": "^2.8.5",
