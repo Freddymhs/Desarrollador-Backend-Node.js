@@ -7,3 +7,5 @@ export default {
   morganFormat: process.env.MORGAN_FORMAT || "dev",
   urlencoded: { extended: true },
 };
+
+export const DB_PATH = "./src/database/tasks.db";
