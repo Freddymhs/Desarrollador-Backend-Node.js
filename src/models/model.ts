@@ -1,11 +1,12 @@
-// todo modelo
-export type Task = {
-  id?: number;
-  titulo: string;
-  descripcion?: string;
-  status?: string;
-  fechaCreacion?: string;
-  fechaActualizacion?: string;
-};
+import { z } from "zod";
 
-// todo validaciones con Zod??
+export const TaskSchema = z.object({
+  id: z.number().optional(),
+  titulo: z.string(),
+  descripcion: z.string().optional(),
+  status: z.string().optional(),
+  fechaCreacion: z.string().optional(),
+  fechaActualizacion: z.string().optional(),
+});
+
+export type Task = z.infer<typeof TaskSchema>;

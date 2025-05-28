@@ -20,7 +20,8 @@
     "helmet": "^8.1.0",
     "morgan": "^1.10.0",
     "sqlite": "^5.1.1",
-    "sqlite3": "^5.1.7"
+    "sqlite3": "^5.1.7",
+    "zod": "^3.25.32"
   },
   "devDependencies": {
     "@types/connect-livereload": "^0.6.3",

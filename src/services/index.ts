@@ -32,6 +32,17 @@ export async function updateTaskStatus(
   await db.run(`UPDATE tasks SET estado = ? WHERE id = ?`, [status, id]);
 }
 
+const taskService = {
+  getAllTasks,
+  createTask,
+  deleteTask,
+  updateTaskStatus,
+};
+
+export default taskService;
+
 // .all() → para obtener múltiples filas.
 // .get() → para una sola fila.
 // .run() → para INSERT, UPDATE, DELETE.
+
+// todo validaciones de datos

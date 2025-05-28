@@ -6,7 +6,6 @@ import config from "@config/index";
 
 const setupMiddlewares = (app: express.Application) => {
   app.use(express.json());
-
   app.use(cors());
   app.use(helmet());
   app.use(morgan(config.morganFormat));

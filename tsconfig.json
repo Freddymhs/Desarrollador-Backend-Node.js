@@ -14,10 +14,13 @@
     "resolveJsonModule": true,
     "baseUrl": ".",
     "paths": {
-      "@app": ["./src/app"],
+      "@config/*": ["./src/config/*"],
       "@utils/*": ["./src/utils/*"],
       "@middleware/*": ["./src/middleware/*"],
-      "@config/*": ["./src/config/*"]
+      "@services/*": ["./src/services/*"],
+      "@controllers/*": ["./src/controllers/*"],
+      "@routes/*": ["./src/routes/*"],
+      "@app": ["./src/app"]
     }
   },
   "include": ["**/*.ts"],
