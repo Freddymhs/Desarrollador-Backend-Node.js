@@ -2,8 +2,6 @@ import { getDatabase } from "./db";
 
 const db = await getDatabase();
 // todo ws
-// - La tabla de tareas debe tener al menos: id (PK, autoincremental), description (texto), status (texto, ej. "pendiente", "completada").
-//  WebSockets (usando socket.io o ws):
 await db.exec(`
     CREATE TABLE IF NOT EXISTS tasks (
       id INTEGER PRIMARY KEY AUTOINCREMENT,

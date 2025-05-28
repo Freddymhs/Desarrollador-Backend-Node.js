@@ -8,7 +8,11 @@ export const getAllTasks = async (req: Request, res: Response) => {
 
 export const createTask = async (req: Request, res: Response) => {
   const { titulo, descripcion } = req.body;
-  const newTask = await taskService.createTask({ titulo, descripcion });
+  const newTask = await taskService.createTask({
+    titulo,
+    descripcion,
+    status: "pendiente",
+  });
   res.status(201).json(newTask);
 };
 
