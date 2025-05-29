@@ -14,7 +14,6 @@ export async function getAllTasks(): Promise<Task[]> {
 //todo [WS]- se crea una nueva tarea (POST /tasks), servidor emite evento a todos los clientes conectados con la información de la nueva tarea. (ej. newTask, payload: la tarea creada).
 export async function createTask(task: Task): Promise<number> {
   const db = await getDatabase();
-
   try {
     const parsed = TaskSchema.safeParse(task);
     if (!parsed.success)
@@ -36,6 +35,8 @@ export async function createTask(task: Task): Promise<number> {
 // todo [WS]//OPCIONAL// Cuando se elimina una tarea, emitir un evento para que los clientes la eliminen de su vista.
 
 export async function deleteTask(id: number): Promise<void> {
+  if (id <= 0) throw new Error("ID inválido: debe ser mayor que 0");
+
   const parsed = idRequiredSchema.safeParse(id);
   if (!parsed.success) throw new Error("ID inválido: " + parsed.error.message);
 
@@ -48,6 +49,9 @@ export async function updateTaskStatus(
   id: number,
   status: string
 ): Promise<void> {
+  if (typeof id !== "number" || id <= 0 || Number.isNaN(id))
+    throw new Error("ID inválido: debe ser un numero y positivo.");
+
   const db = await getDatabase();
 
   try {
