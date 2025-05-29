@@ -1,32 +1,37 @@
 import { OpenAPIRegistry } from "@asteasolutions/zod-to-openapi";
-import { z } from "zod";
-import { TaskSchema } from "src/models/model";
-import { SERVER_MESSAGES } from "@utils/constants";
+import {
+  CreateTaskSchema,
+  DeleteTaskSchema,
+  IdParamSchema,
+  TaskSchema,
+  UpdateTaskSchema,
+} from "src/models/model";
 
 const registry = new OpenAPIRegistry();
+
 const basicInfo = {
   openapi: "3.0.0",
   info: {
     title: "API de Gestión de Tareas",
     version: "1.0.0",
+    description: "API REST para gestionar tareas con WebSocket en tiempo real",
   },
-  // servers: [
-  //   {
-  //     url: `http://${process.env.HOST || "localhost"}:${
-  //       process.env.PORT || 3000
-  //     }`,
-  //   },
-  // ],
 };
 
+registry.register("CreateTask", CreateTaskSchema);
 registry.register("Task", TaskSchema);
+registry.register("UpdateTask", UpdateTaskSchema);
+registry.register("DeleteTask", DeleteTaskSchema);
+
 registry.registerPath({
   method: "get",
   path: "/tasks",
   summary: "Obtener todas las tareas",
+  description: "Retorna una lista con todas las tareas existentes",
+  tags: ["Tasks"],
   responses: {
     200: {
-      description: "Lista de tareas",
+      description: "Lista de tareas obtenida exitosamente",
       content: {
         "application/json": {
           schema: {
@@ -40,24 +45,28 @@ registry.registerPath({
     },
   },
 });
+// create
 registry.registerPath({
   method: "post",
   path: "/tasks",
   summary: "Crear una nueva tarea",
-  request: {
-    body: {
-      content: {
-        "application/json": {
-          schema: {
-            $ref: "#/components/schemas/Task",
-          },
+  description:
+    "Crea una nueva tarea. Solo requiere título, la descripción es opcional. El ID y status se generan automáticamente.",
+  tags: ["Tasks"],
+  requestBody: {
+    required: true,
+    description: "Datos para crear la tarea",
+    content: {
+      "application/json": {
+        schema: {
+          $ref: "#/components/schemas/CreateTask",
         },
       },
     },
   },
   responses: {
     201: {
-      description: "Tarea creada",
+      description: "Tarea creada exitosamente",
       content: {
         "application/json": {
           schema: {
@@ -66,29 +75,45 @@ registry.registerPath({
         },
       },
     },
+    400: {
+      description: "Datos inválidos",
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              error: { type: "string" },
+              message: { type: "string" },
+            },
+          },
+        },
+      },
+    },
   },
 });
+// update
 registry.registerPath({
   method: "put",
   path: "/tasks/{id}",
-  summary: "Actualizar estado de tarea",
+  summary: "Actualizar estado de una tarea",
+  description: "Actualiza únicamente el estado de una tarea específica",
+  tags: ["Tasks"],
   request: {
-    params: z.object({
-      id: z.string(),
-    }),
-    body: {
-      content: {
-        "application/json": {
-          schema: {
-            $ref: "#/components/schemas/Task",
-          },
+    params: IdParamSchema,
+  },
+  requestBody: {
+    required: true,
+    content: {
+      "application/json": {
+        schema: {
+          $ref: "#/components/schemas/UpdateTask",
         },
       },
     },
   },
   responses: {
     200: {
-      description: "Tarea actualizada",
+      description: "Tarea actualizada exitosamente",
       content: {
         "application/json": {
           schema: {
@@ -97,37 +122,40 @@ registry.registerPath({
         },
       },
     },
+    404: {
+      description: "Tarea no encontrada",
+    },
   },
 });
+// delete
 registry.registerPath({
   method: "delete",
   path: "/tasks/{id}",
-  summary: "Eliminar tarea",
+  summary: "Eliminar una tarea",
+  description: "Elimina permanentemente una tarea específica",
+  tags: ["Tasks"],
   request: {
-    params: z.object({
-      id: z.string(),
-    }),
+    params: IdParamSchema,
   },
-  responses: {
-    204: {
-      description: "Tarea eliminada",
-    },
-  },
-});
-registry.registerPath({
-  method: "get",
-  path: "/",
-  summary: "root path",
   responses: {
     200: {
-      description: SERVER_MESSAGES.apiIsRunning,
+      description: "Tarea eliminada exitosamente",
       content: {
-        "text/plain": {
+        "application/json": {
           schema: {
-            type: "string",
+            type: "object",
+            properties: {
+              message: {
+                type: "string",
+                example: "Tarea eliminada exitosamente",
+              },
+            },
           },
         },
       },
+    },
+    404: {
+      description: "Tarea no encontrada",
     },
   },
 });

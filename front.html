@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <div id="show-area" />
+
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+
+    <script>
+      const socket = io("http://localhost:3000");
+
+      const listaTareas = document.getElementById("show-area");
+      const renderTasks = (tareas) => {
+        const html = tareas
+          .map(
+            (tarea) => `
+            <div>
+              ID: ${tarea.id}<br>
+              Título: ${tarea.titulo}<br>
+              Descripción: ${tarea.descripcion || "Sin descripción"}<br>
+              Estado: ${tarea.status}
+            </div>
+            <br>
+          `
+          )
+          .join("");
+
+        listaTareas.innerHTML = html;
+      };
+
+      const showTasks = async () => {
+        try {
+          const response = await fetch("http://localhost:3000/tasks");
+          const tareas = await response.json();
+          const { ok } = response;
+
+          ok
+            ? renderTasks(tareas)
+            : (listaTareas.textContent = "Error al obtener tareas");
+        } catch ({ message }) {
+          listaTareas.textContent = "error" + message;
+        }
+      };
+
+      socket.on("newTask", showTasks);
+      socket.on("taskDeleted", showTasks);
+      socket.on("taskUpdated", showTasks);
+
+      showTasks();
+    </script>
+  </body>
+</html>

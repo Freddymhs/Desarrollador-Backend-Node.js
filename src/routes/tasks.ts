@@ -1,7 +1,10 @@
 import { Router } from "express";
 import taskControllers from "@controllers/index";
+import { injectSocketIO } from "@middleware/sockets";
 
 const routes = Router();
+
+routes.use(injectSocketIO);
 
 routes.get("/tasks", taskControllers.getAllTasks);
 routes.post("/tasks", taskControllers.createTask);
