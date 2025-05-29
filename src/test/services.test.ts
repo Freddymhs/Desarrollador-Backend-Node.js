@@ -114,7 +114,7 @@ describe("Task Services", () => {
   });
 
   describe("createTask", () => {
-    it("should accept valid task and return a number (new ID)", async () => {
+    it("should accept valid task", async () => {
       mockDb.run.mockResolvedValue({ lastID: 123 });
 
       const validTask: Task = {
@@ -123,9 +123,14 @@ describe("Task Services", () => {
         status: "pendiente",
       };
 
-      const id = await taskService.createTask(validTask);
-      expect(typeof id).toBe("number");
-      expect(id).toBe(123);
+      const res = await taskService.createTask(validTask);
+
+      expect(res).toEqual({
+        id: 123,
+        titulo: "Tarea valida",
+        descripcion: "prueba",
+        status: "pendiente",
+      });
 
       expect(mockDb.run).toHaveBeenCalledWith(
         "INSERT INTO tasks (titulo, descripcion, status) VALUES (?, ?, ?)",

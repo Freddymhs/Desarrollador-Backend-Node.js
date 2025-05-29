@@ -9,6 +9,7 @@ export default {
   transform: {
     ...tsJestTransformCfg,
   },
+  testPathIgnorePatterns: ["/node_modules/", "/dist/"],
   moduleNameMapper: {
     "^src/(.*)$": "<rootDir>/src/$1",
 
