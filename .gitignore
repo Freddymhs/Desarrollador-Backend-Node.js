@@ -1,6 +1,5 @@
 /dist
 /node_modules
-README.md
 .env
 helper.js
 tasks.db
