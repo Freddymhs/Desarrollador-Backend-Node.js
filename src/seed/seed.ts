@@ -1,4 +1,4 @@
-import { getDatabase } from "../models/db";
+import { getDatabase } from "../database/db";
 import { tasks } from "./constans";
 
 async function seed() {

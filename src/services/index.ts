@@ -1,4 +1,4 @@
-import { getDatabase } from "src/models/db";
+import { getDatabase } from "src/database/db";
 import {
   Task,
   TaskSchema,

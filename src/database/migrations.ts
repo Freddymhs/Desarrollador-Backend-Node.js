@@ -1,7 +1,6 @@
 import { getDatabase } from "./db";
 
 const db = await getDatabase();
-// todo ws
 await db.exec(`
     CREATE TABLE IF NOT EXISTS tasks (
       id INTEGER PRIMARY KEY AUTOINCREMENT,

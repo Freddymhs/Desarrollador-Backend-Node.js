@@ -1,8 +1,8 @@
-import { getDatabase } from "src/models/db";
+import { getDatabase } from "src/database/db";
 import taskService from "@services/index";
 import { Task } from "src/models/model";
 
-jest.mock("src/models/db", () => ({
+jest.mock("src/database/db", () => ({
   getDatabase: jest.fn(),
 }));
 

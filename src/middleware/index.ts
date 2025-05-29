@@ -3,8 +3,9 @@ import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
 import config from "@config/index";
+import { Express } from "express";
 
-const setupMiddlewares = (app: express.Application) => {
+const setupMiddlewares = (app: Express) => {
   app.use(express.json());
   app.use(cors());
   app.use(helmet());
