@@ -1,5 +1,7 @@
 import sqlite3 from "sqlite3";
 import { open, Database } from "sqlite";
+import dotenv from "dotenv";
+dotenv.config();
 
 type DB = Database<sqlite3.Database, sqlite3.Statement>;
 
