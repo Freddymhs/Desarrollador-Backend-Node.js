@@ -9,23 +9,15 @@ jest.mock("src/database/db", () => ({
 const mockGetDatabase = getDatabase as jest.Mock;
 
 describe("Task Services", () => {
-  let mockDb: { run: jest.Mock };
+  let mockDb: { run: jest.Mock; all: jest.Mock; get: jest.Mock };
 
   beforeEach(() => {
     jest.clearAllMocks();
-    mockDb = { run: jest.fn() };
+    mockDb = { run: jest.fn(), all: jest.fn(), get: jest.fn() };
     mockGetDatabase.mockResolvedValue(mockDb);
   });
 
   describe("getAllTasks", () => {
-    let mockDb: { all: jest.Mock };
-
-    beforeEach(() => {
-      jest.clearAllMocks();
-      mockDb = { all: jest.fn() };
-      mockGetDatabase.mockResolvedValue(mockDb);
-    });
-
     it("should return empty array when no tasks exist", async () => {
       mockDb.all.mockResolvedValue([]);
 
@@ -80,14 +72,42 @@ describe("Task Services", () => {
     });
   });
 
+  describe("getTaskById", () => {
+    it("should return task when found", async () => {
+      const mockTask = {
+        id: 1,
+        titulo: "Test Task",
+        status: "pendiente",
+      };
+      mockDb.get.mockResolvedValue(mockTask);
+
+      const result = await taskService.getTaskById(1);
+
+      expect(result).toEqual(mockTask);
+    });
+
+    it("should return null when task not found", async () => {
+      mockDb.get.mockResolvedValue(undefined);
+
+      const result = await taskService.getTaskById(999);
+
+      expect(result).toBeNull();
+    });
+  });
+
   describe("updateTaskStatus", () => {
-    it("should accept 'pendiente' and 'completada' as valid statuses", async () => {
-      await expect(
-        taskService.updateTaskStatus(1, "pendiente")
-      ).resolves.toBeUndefined();
-      await expect(
-        taskService.updateTaskStatus(1, "completada")
-      ).resolves.toBeUndefined();
+    it("should update and return task with new status", async () => {
+      const existingTask = {
+        id: 1,
+        titulo: "Test Task",
+        status: "pendiente",
+      };
+      mockDb.get.mockResolvedValue(existingTask);
+      mockDb.run.mockResolvedValue({});
+
+      const result = await taskService.updateTaskStatus(1, "completada");
+
+      expect(result.status).toBe("completada");
     });
 
     it("should reject invalid ID values", async () => {
@@ -101,15 +121,47 @@ describe("Task Services", () => {
         taskService.updateTaskStatus(NaN, "pendiente")
       ).rejects.toThrow(/ID inválido/);
     });
+
+    it("should reject invalid status values", async () => {
+      const existingTask = { id: 1, titulo: "Test", status: "pendiente" };
+      mockDb.get.mockResolvedValue(existingTask);
+
+      await expect(
+        taskService.updateTaskStatus(1, "invalido")
+      ).rejects.toThrow(/Status inválido/);
+    });
+
+    it("should throw NotFoundError when task does not exist", async () => {
+      mockDb.get.mockResolvedValue(undefined);
+
+      await expect(
+        taskService.updateTaskStatus(999, "completada")
+      ).rejects.toThrow(/no encontrado/);
+    });
   });
 
   describe("deleteTask", () => {
     it("should reject invalid ID (negative number)", async () => {
-      await expect(taskService.deleteTask(-1)).rejects.toThrow("ID inválido:");
+      await expect(taskService.deleteTask(-1)).rejects.toThrow(/ID inválido/);
     });
 
     it("should reject invalid ID (zero)", async () => {
-      await expect(taskService.deleteTask(0)).rejects.toThrow("ID inválido:");
+      await expect(taskService.deleteTask(0)).rejects.toThrow(/ID inválido/);
+    });
+
+    it("should throw NotFoundError when task does not exist", async () => {
+      mockDb.get.mockResolvedValue(undefined);
+
+      await expect(taskService.deleteTask(999)).rejects.toThrow(/no encontrado/);
+    });
+
+    it("should delete task when it exists", async () => {
+      const existingTask = { id: 1, titulo: "Test", status: "pendiente" };
+      mockDb.get.mockResolvedValue(existingTask);
+      mockDb.run.mockResolvedValue({});
+
+      await expect(taskService.deleteTask(1)).resolves.toBeUndefined();
+      expect(mockDb.run).toHaveBeenCalled();
     });
   });
 
@@ -127,9 +179,9 @@ describe("Task Services", () => {
 
       expect(res).toEqual({
         id: 123,
-        titulo: "Tarea valida",
-        descripcion: "prueba",
-        status: "pendiente",
+        titulo: validTask.titulo,
+        descripcion: validTask.descripcion,
+        status: validTask.status,
       });
 
       expect(mockDb.run).toHaveBeenCalledWith(
@@ -141,10 +193,6 @@ describe("Task Services", () => {
     });
 
     it("should reject invalid tasks according to schema", async () => {
-      const consoleSpy = jest
-        .spyOn(console, "error")
-        .mockImplementation(() => {});
-
       const invalidTask: any = {
         titulo: "",
         descripcion: "desc",
@@ -152,10 +200,8 @@ describe("Task Services", () => {
       };
 
       await expect(taskService.createTask(invalidTask)).rejects.toThrow(
-        /Error Schema invalido/
+        /Schema inválido/
       );
-
-      consoleSpy.mockRestore();
     });
   });
 });

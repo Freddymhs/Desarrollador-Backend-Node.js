@@ -1,13 +1,14 @@
 import { Server } from "socket.io";
 import { Server as HttpServer } from "http";
 import { Express } from "express";
+import config from "@config/index";
 
 export const createSocketServer = (httpServer: HttpServer, app: Express) => {
   const newSocketServer = new Server(httpServer, {
-    // transports: ["websocket"], // forzar WebSocket
     cors: {
-      origin: "*",
-      methods: ["GET", "POST", "PUT", "DELETE"],
+      origin: config.cors.origin,
+      methods: config.cors.methods,
+      credentials: config.cors.credentials,
     },
   });
 

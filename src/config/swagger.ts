@@ -45,6 +45,32 @@ registry.registerPath({
     },
   },
 });
+
+registry.registerPath({
+  method: "get",
+  path: "/tasks/{id}",
+  summary: "Obtener una tarea por ID",
+  description: "Retorna una tarea específica según su ID",
+  tags: ["Tasks"],
+  request: {
+    params: IdParamSchema,
+  },
+  responses: {
+    200: {
+      description: "Tarea obtenida exitosamente",
+      content: {
+        "application/json": {
+          schema: {
+            $ref: "#/components/schemas/Task",
+          },
+        },
+      },
+    },
+    404: {
+      description: "Tarea no encontrada",
+    },
+  },
+});
 // create
 registry.registerPath({
   method: "post",

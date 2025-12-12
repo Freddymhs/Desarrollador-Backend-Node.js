@@ -1,5 +1,5 @@
 import { getDatabase } from "../database/db";
-import { tasks } from "./constans";
+import { tasks } from "./constants";
 
 async function seed() {
   const db = await getDatabase();
